@@ -159,6 +159,12 @@ struct ContentView: View {
                     Image(symbols[reels[0]])
                         .resizable()
                         .modifier(ImageModifier())
+                        .opacity(animatingSymbol ? 1 : 0)
+                        .offset(y: animatingSymbol ? 0 : -50)
+                        .animation(.easeOut(duration: Double.random(in: 0.5...0.7)))
+                        .onAppear(perform: {
+                            self.animatingSymbol.toggle()
+                        })
 
                 }
                 
@@ -170,6 +176,12 @@ struct ContentView: View {
                         Image(symbols[reels[1]])
                             .resizable()
                             .modifier(ImageModifier())
+                            .opacity(animatingSymbol ? 1 : 0)
+                            .offset(y: animatingSymbol ? 0 : -50)
+                            .animation(.easeOut(duration: Double.random(in: 0.7...0.9)))
+                            .onAppear(perform: {
+                                self.animatingSymbol.toggle()
+                            })
 
                     }
                     
@@ -181,6 +193,12 @@ struct ContentView: View {
                         Image(symbols[reels[2]])
                             .resizable()
                             .modifier(ImageModifier())
+                            .opacity(animatingSymbol ? 1 : 0)
+                            .offset(y: animatingSymbol ? 0 : -50)
+                            .animation(.easeOut(duration: Double.random(in: 0.9...1.1)))
+                            .onAppear(perform: {
+                                self.animatingSymbol.toggle()
+                            })
 
                     }
                                     
@@ -188,20 +206,28 @@ struct ContentView: View {
                 .frame(maxWidth: 500)
                 
           
-           // MARK: - SPIN BUTTON
+                // MARK: - SPIN BUTTON
                 Button(action: {
-          // SPIN THE REELS
-                    self.spinReels()
-                    
-          // CHECK WINNIG
-                    
-                    self.checkWinning()
-                    
-        // GAME IS OVER
-                    
-                    self.isGameOver()
-                    
+                  // 1. SET THE DEFAULT STATE: NO ANIMATION
+                  withAnimation {
+                    self.animatingSymbol = false
+                  }
+                  
+                  // 2. SPIN THE REELS WITH CHANGING THE SYMBOLS
+                  self.spinReels()
+                  
+                  // 3. TRIGGER THE ANIMATION AFTER CHANGING THE SYMBOLS
+                  withAnimation {
+                    self.animatingSymbol = true
+                  }
+                  
+                  // 4. CHECK WINNING
+                  self.checkWinning()
+                  
+                  // 5. GAME IS OVER
+                  self.isGameOver()
                 }){
+                    
                  Image("gfx-spin")
                     .renderingMode(.original)
                     .resizable()
@@ -233,34 +259,34 @@ struct ContentView: View {
                 
                 Image("gfx-casino-chips")
                     .resizable()
+                    .offset(x: isActiveBet20 ? 0 : 20)
                     .opacity(isActiveBet20 ? 1 : 0)
                     .modifier(CasinoChipsModifier())
                 
             }
+                
+                Spacer()
             
-            // MARK: - BET 10
-                Image("gfx-casino-chips")
-                                   .resizable()
+                // MARK: - BET 10
+                HStack(alignment: .center, spacing: 10) {
+                  Image("gfx-casino-chips")
+                    .resizable()
+                    .offset(x: isActiveBet10 ? 0 : -20)
                     .opacity(isActiveBet10 ? 1 : 0)
-                                   .modifier(CasinoChipsModifier())
-                
-            HStack(alignment: .center, spacing: 10){
-                Button(action: {
+                    .modifier(CasinoChipsModifier())
+                  
+                  Button(action: {
                     self.activateBet10()
-                }){
+                  }) {
                     Text("10")
-                        .fontWeight(.heavy)
-                        .foregroundColor(isActiveBet10 ? Color("ColorYellow"): Color.white)
-                        .modifier(BetNumberModifier())
+                      .fontWeight(.heavy)
+                      .foregroundColor(isActiveBet10 ? Color("ColorYellow") : Color.white)
+                      .modifier(BetNumberModifier())
+                  }
+                  .modifier(BetCapsuleModifier())
                 }
-                .modifier(BetCapsuleModifier())
-                
-               
-                
+              }
             }
-        }
-        }
-        
        
         // MARK: - BUTTONS
         
