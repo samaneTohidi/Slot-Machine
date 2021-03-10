@@ -18,6 +18,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
+        // FIXED-SIZED APP WINDOW FOR MAC
+        if let scene = scene as? UIWindowScene{
+            scene.sizeRestrictions?.minimumSize = CGSize.init(width: 600, height: 800)
+            scene.sizeRestrictions?.maximumSize = CGSize.init(width: 600, height: 800)
+            
+        }
+        
         // Create the SwiftUI view that provides the window contents.
         let contentView = ContentView()
 
